@@ -6,14 +6,26 @@ using UnityEngine;
 public class Ball : MonoBehaviour
 {
     private Rigidbody m_Rigidbody;
+    private AudioSource myVoice;
+    public AudioClip[] sounds; 
 
     void Start()
     {
         m_Rigidbody = GetComponent<Rigidbody>();
+        myVoice = GetComponent<AudioSource>();
     }
     
     private void OnCollisionExit(Collision other)
     {
+        if (other.gameObject.CompareTag("Brick"))
+        {
+            myVoice.PlayOneShot(sounds[0]);
+        }
+        else if(other.gameObject.CompareTag("Padle"))
+        {
+            myVoice.PlayOneShot(sounds[1]);
+        }
+
         var velocity = m_Rigidbody.velocity;
         
         //after a collision we accelerate a bit
