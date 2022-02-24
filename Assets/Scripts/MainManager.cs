@@ -24,7 +24,9 @@ public class MainManager : MonoBehaviour
     {
         const float step = 0.6f;
         int perLine = Mathf.FloorToInt(4.0f / step);
-        
+
+        ScoreText.text = $"{GameManager.playerName} Score : 0";
+
         int[] pointCountArray = new [] {1,1,2,2,5,5};
         for (int i = 0; i < LineCount; ++i)
         {
@@ -57,7 +59,7 @@ public class MainManager : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+                SceneManager.LoadScene(0);
             }
         }
     }
@@ -65,12 +67,101 @@ public class MainManager : MonoBehaviour
     void AddPoint(int point)
     {
         m_Points += point;
-        ScoreText.text = $"Score : {m_Points}";
+        ScoreText.text = $"{GameManager.playerName} Score : {m_Points}";
     }
 
     public void GameOver()
     {
         m_GameOver = true;
         GameOverText.SetActive(true);
+        WriteRecords();
+    }
+
+    private void WriteRecords()
+    {
+        bool empty = true;
+
+        //write empty slots;
+        for(int i = 0;i < GameManager.recordsNames.Length;i++)
+        {            
+            if(GameManager.recordsNames[i] == null)
+            {
+                GameManager.recordsNames[i] = GameManager.playerName;
+                GameManager.records[i] = m_Points;
+                break;
+            }
+
+            if(i == 4) empty = false;
+        }
+
+        sortRecords();
+        Debug.Log(empty);
+        if (!empty)
+        {
+            AddNewRecords();
+        }        
+    }
+
+    private void sortRecords()
+    {
+        int[] r = GameManager.records;
+        string[] name = GameManager.recordsNames;
+        for (int i = 0; i < r.Length; i++)
+        {
+            int num = r[i];  // the biggest number
+            int index = i;   // index this number
+
+            for (int j = index; j < r.Length; j++)
+            {
+                if (r[j] > num)
+                {
+                    num = r[j];
+                    index = j;
+                }
+            }
+
+            r[index] = r[i];
+            r[i] = num;
+
+            string m = name[index]; // the neme with biggest number
+            name[index] = name[i];
+            name[i] = m;
+        }
+
+        GameManager.records = r;
+        GameManager.recordsNames = name;
+    }
+
+    private void AddNewRecords()
+    {
+        int index = 0;
+        int num = 0;
+        string name = "";
+        string name2 = "";
+        bool change = true;
+        foreach(int n in GameManager.records)
+        {
+            if (m_Points > n && change)
+            {
+                num = GameManager.records[index];
+                GameManager.records[index] = m_Points;
+
+                name = GameManager.recordsNames[index];
+                GameManager.recordsNames[index] = GameManager.playerName;
+
+                change = false;
+            }
+            else if(!change)
+            {
+                GameManager.records[index] = num;                
+                num = n;
+
+                name2 = GameManager.recordsNames[index];
+                GameManager.recordsNames[index] = name;
+                name = name2;
+            }
+
+            index++;
+        }
     }
 }

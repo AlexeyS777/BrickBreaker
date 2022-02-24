@@ -7,6 +7,7 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager gameManager;
 
+    public static string playerName;
     public static string[] recordsNames;
     public static int[] records;
 
