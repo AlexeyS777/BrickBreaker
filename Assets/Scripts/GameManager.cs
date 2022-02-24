@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour
     public static string playerName;
     public static string[] recordsNames;
     public static int[] records;
+    public static int points;
 
     private void Awake()
     {
@@ -58,7 +59,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void SaveRecords()
+    public static void SaveRecords()
     {
         SaveData data = new SaveData();
         data.records = records;

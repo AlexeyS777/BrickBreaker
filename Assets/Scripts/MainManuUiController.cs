@@ -24,6 +24,7 @@ public class MainManuUiController : MonoBehaviour
 
     public void StartGame()
     {
+        GameManager.points = 0;
         SceneManager.LoadScene(1);
     }
 
@@ -57,7 +58,7 @@ public class MainManuUiController : MonoBehaviour
     {
         GameManager.playerName = nameField.text;
 
-        if (!playerName.gameObject.activeSelf)
+        if (GameManager.playerName.Length > 0 && !playerName.gameObject.activeSelf)
         {
             playerName.text = "With " + GameManager.playerName;
             playerName.gameObject.SetActive(true);
